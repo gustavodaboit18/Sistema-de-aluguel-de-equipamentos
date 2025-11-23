@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Sistema de Aluguel de Equipamentos</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h2 { margin-top: 40px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    input, select { margin: 5px 0; padding: 5px; width: 100%; }
+    button { padding: 8px 12px; margin-top: 5px; }
+    .form-container { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+
+<h1>Sistema de Aluguel de Equipamentos</h1>
+
+<!-- EQUIPAMENTOS -->
+<h2>Equipamentos</h2>
+<div class="form-container">
+  <h3>Criar Equipamento</h3>
+  <input type="text" id="equip_nome" placeholder="Nome">
+  <input type="number" step="0.01" id="equip_preco" placeholder="Preço">
+  <input type="text" id="equip_marca" placeholder="Marca">
+  <input type="text" id="equip_serie" placeholder="Número de série">
+  <input type="date" id="equip_data" placeholder="Data de compra">
+  <button onclick="criarEquipamento()">Criar Equipamento</button>
+</div>
+<table id="equip_table">
+  <thead>
+    <tr>
+      <th>ID</th><th>Nome</th><th>Preço</th><th>Marca</th><th>Série</th><th>Data Compra</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<!-- CLIENTES -->
+<h2>Clientes</h2>
+<div class="form-container">
+  <h3>Criar Cliente</h3>
+  <input type="text" id="cliente_nome" placeholder="Nome">
+  <input type="text" id="cliente_cpf" placeholder="CPF">
+  <input type="email" id="cliente_email" placeholder="Email">
+  <input type="text" id="cliente_telefone" placeholder="Telefone">
+  <input type="text" id="cliente_cnpj" placeholder="CNPJ">
+  <input type="text" id="cliente_tipo" placeholder="Tipo (PF/PJ)">
+  <input type="text" id="cliente_responsavel" placeholder="Responsável">
+  <button onclick="criarCliente()">Criar Cliente</button>
+</div>
+<table id="cliente_table">
+  <thead>
+    <tr>
+      <th>ID</th><th>Nome</th><th>CPF</th><th>Email</th><th>Telefone</th><th>CNPJ</th><th>Tipo</th><th>Responsável</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+const BASE_URL = "http://localhost:3000";
+
+// === EQUIPAMENTOS ===
+async function listarEquipamentos() {
+  const res = await fetch(`${BASE_URL}/equipamentos`);
+  const data = await res.json();
+  const tbody = document.querySelector("#equip_table tbody");
+  tbody.innerHTML = "";
+  data.forEach(e => {
+    tbody.innerHTML += `<tr>
+      <td>${e.id_equipamento}</td>
+      <td>${e.nome}</td>
+      <td>${e.preco}</td>
+      <td>${e.marca}</td>
+      <td>${e.numero_de_serie}</td>
+      <td>${e.data_compra?.split("T")[0]}</td>
+    </tr>`;
+  });
+}
+
+async function criarEquipamento() {
+  const equipamento = {
+    nome: document.getElementById("equip_nome").value,
+    preco: parseFloat(document.getElementById("equip_preco").value),
+    marca: document.getElementById("equip_marca").value,
+    numero_de_serie: document.getElementById("equip_serie").value,
+    data_compra: document.getElementById("equip_data").value
+  };
+  await fetch(`${BASE_URL}/equipamentos`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(equipamento)
+  });
+  listarEquipamentos();
+}
+
+// === CLIENTES ===
+async function listarClientes() {
+  const res = await fetch(`${BASE_URL}/clientes`);
+  const data = await res.json();
+  const tbody = document.querySelector("#cliente_table tbody");
+  tbody.innerHTML = "";
+  data.forEach(c => {
+    tbody.innerHTML += `<tr>
+      <td>${c.id_cliente}</td>
+      <td>${c.nome}</td>
+      <td>${c.cpf}</td>
+      <td>${c.email}</td>
+      <td>${c.telefone}</td>
+      <td>${c.cnpj}</td>
+      <td>${c.tipo}</td>
+      <td>${c.nome_responsavel}</td>
+    </tr>`;
+  });
+}
+
+async function criarCliente() {
+  const cliente = {
+    nome: document.getElementById("cliente_nome").value,
+    cpf: document.getElementById("cliente_cpf").value,
+    email: document.getElementById("cliente_email").value,
+    telefone: document.getElementById("cliente_telefone").value,
+    cnpj: document.getElementById("cliente_cnpj").value,
+    tipo: document.getElementById("cliente_tipo").value,
+    nome_responsavel: document.getElementById("cliente_responsavel").value
+  };
+  await fetch(`${BASE_URL}/clientes`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(cliente)
+  });
+  listarClientes();
+}
+
+// Inicializa tabelas
+listarEquipamentos();
+listarClientes();
+</script>
+
+</body>
+</html>
