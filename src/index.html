@@ -17,26 +17,6 @@
 
 <h1>Sistema de Aluguel de Equipamentos</h1>
 
-<!-- EQUIPAMENTOS -->
-<h2>Equipamentos</h2>
-<div class="form-container">
-  <h3>Criar Equipamento</h3>
-  <input type="text" id="equip_nome" placeholder="Nome">
-  <input type="number" step="0.01" id="equip_preco" placeholder="Preço">
-  <input type="text" id="equip_marca" placeholder="Marca">
-  <input type="text" id="equip_serie" placeholder="Número de série">
-  <input type="date" id="equip_data" placeholder="Data de compra">
-  <button onclick="criarEquipamento()">Criar Equipamento</button>
-</div>
-<table id="equip_table">
-  <thead>
-    <tr>
-      <th>ID</th><th>Nome</th><th>Preço</th><th>Marca</th><th>Série</th><th>Data Compra</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
-
 <!-- CLIENTES -->
 <h2>Clientes</h2>
 <div class="form-container">
@@ -62,39 +42,7 @@
 <script>
 const BASE_URL = "http://localhost:3000";
 
-// === EQUIPAMENTOS ===
-async function listarEquipamentos() {
-  const res = await fetch(`${BASE_URL}/equipamentos`);
-  const data = await res.json();
-  const tbody = document.querySelector("#equip_table tbody");
-  tbody.innerHTML = "";
-  data.forEach(e => {
-    tbody.innerHTML += `<tr>
-      <td>${e.id_equipamento}</td>
-      <td>${e.nome}</td>
-      <td>${e.preco}</td>
-      <td>${e.marca}</td>
-      <td>${e.numero_de_serie}</td>
-      <td>${e.data_compra?.split("T")[0]}</td>
-    </tr>`;
-  });
-}
 
-async function criarEquipamento() {
-  const equipamento = {
-    nome: document.getElementById("equip_nome").value,
-    preco: parseFloat(document.getElementById("equip_preco").value),
-    marca: document.getElementById("equip_marca").value,
-    numero_de_serie: document.getElementById("equip_serie").value,
-    data_compra: document.getElementById("equip_data").value
-  };
-  await fetch(`${BASE_URL}/equipamentos`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(equipamento)
-  });
-  listarEquipamentos();
-}
 
 // === CLIENTES ===
 async function listarClientes() {
@@ -135,7 +83,6 @@ async function criarCliente() {
 }
 
 // Inicializa tabelas
-listarEquipamentos();
 listarClientes();
 </script>
 
