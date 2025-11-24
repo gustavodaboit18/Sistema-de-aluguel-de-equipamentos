@@ -54,3 +54,8 @@ npm install nodemon
 # Execução:
 npm run dev
 ```
+# 🚀 Execução do Frontend
+```sh
+Acessar no navegador o arquivo index.html
+```
+
