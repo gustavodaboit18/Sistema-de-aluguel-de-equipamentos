@@ -27,3 +27,30 @@ Use exatamente estes comandos no diretório onde está o `docker-compose.yml`:
 docker compose down -v
 docker compose build --no-cache
 docker compose up
+```
+
+
+# 🚀 Execução do Backend
+
+Para iniciar o servidor Node.js do projeto, siga os passos abaixo:
+
+## 📂 1. Acessar o diretório do backend
+
+```sh
+cd Sistema-de-aluguel-de-equipamentos/src
+npm install
+Use npm init -y apenas caso não exista um arquivo package.json.
+```
+
+## 📂 2. Instalar dependências
+```sh
+# Dependências utilizadas:
+npm install express
+npm install nodemon
+```
+
+## 📂 3. Executar
+```sh
+# Execução:
+npm run dev
+```
