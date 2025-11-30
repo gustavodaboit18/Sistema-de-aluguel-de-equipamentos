@@ -22,6 +22,43 @@ select * from ranking
 where rank<=5
 order by qtde_locacoes desc
 
+-- pergunta 3- Quais os 5 equipamentos com mais tempo ocioso? WINDOW FINCTION(rank)
+
+WITH ultima_locacao AS (
+SELECT 
+        e.id_equipamento,
+        e.nome,
+        e.data_compra,
+        MAX(li.data_fim) AS ultima_locacao_data
+    FROM equipamento e
+    LEFT JOIN locacao_itens li 
+        ON li.id_equipamento = e.id_equipamento
+    GROUP BY 
+        e.id_equipamento, e.nome, e.data_compra
+),
+tempos AS (
+    SELECT
+        id_equipamento,
+        nome,
+        DATEDIFF(DAY, COALESCE(ultima_locacao_data, data_compra), GETDATE()) AS dias_ocioso
+    FROM ultima_locacao
+),
+ranking AS (
+    SELECT
+        id_equipamento,
+        nome,
+        dias_ocioso,
+        RANK() OVER (ORDER BY dias_ocioso DESC) AS posicao
+    FROM tempos
+)
+SELECT TOP 5
+    id_equipamento,
+    nome,
+    dias_ocioso,
+    posicao
+FROM ranking
+ORDER BY posicao;
+    
 -- pergunta 4- Quais os três equipamentos que geraram mais receita para a empresa em um determinado ano? FUNCTION
 
 DROP FUNCTION IF EXISTS dbo.fn_EquipamentosReceita;
@@ -44,6 +81,7 @@ RETURN (
 GO
 
 select * from dbo.fn_EquipamentosReceita(2023);
+
 
 
 
