@@ -1,6 +1,5 @@
 --pergunta 1: 1-Em qual cliente está cada equipamento? JOIN
 
-
 SELECT e.nome,e.marca,e.id_equipamento ,c.nome
 FROM equipamento e 
 inner join locacao_itens li on li.id_equipamento=e.id_equipamento
@@ -81,6 +80,7 @@ RETURN (
 GO
 
 select * from dbo.fn_EquipamentosReceita(2023);
+
 
 
 
