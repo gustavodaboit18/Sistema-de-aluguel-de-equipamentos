@@ -86,25 +86,24 @@ select * from dbo.fn_EquipamentosReceita(2023);
 -- PERGUNTA 6 - Cliente que mais alugou equipamentos? **Subconsultas**
 
 SELECT
-c.nome,
-(
--- Subconsulta para contar o total de locações
-SELECT COUNT()
-FROM locacao l
-WHERE l.id_cliente = c.id_cliente
-) AS total_locacoes,
-(
--- Subconsulta para contar o total de itens alugados
-SELECT COUNT()
-FROM locacao_itens li
-JOIN locacao l ON l.id_locacao = li.id_locacao
-WHERE l.id_cliente = c.id_cliente
-) AS total_itens_alugados
+    c.nome,
+    (
+        
+        SELECT COUNT(*)
+        FROM locacao l
+        WHERE l.id_cliente = c.id_cliente
+    ) AS total_locacoes,
+    (
+    
+        SELECT COUNT(*)
+        FROM locacao_itens li
+        JOIN locacao l ON l.id_locacao = li.id_locacao
+        WHERE l.id_cliente = c.id_cliente
+    ) AS total_itens_alugados
 FROM cliente c
 WHERE (
--- Condição original: cliente tem pelo menos 1 locação
-SELECT COUNT(*)
-FROM locacao l
-WHERE l.id_cliente = c.id_cliente
+    SELECT COUNT(*)
+    FROM locacao l
+    WHERE l.id_cliente = c.id_cliente
 ) > 0
 ORDER BY total_locacoes DESC, total_itens_alugados DESC;
