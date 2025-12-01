@@ -81,7 +81,58 @@ GO
 
 select * from dbo.fn_EquipamentosReceita(2023);
 
--- PERGUNTA 5 - 
+-- PERGUNTA 5 - Como aplicar um desconto em um equipamento de aluguel durante um período específico? Store Procedure
+
+CREATE PROCEDURE sp_AdicionarLoteEquipamentos
+@id_locacao INT,
+@lista_equipamentos VARCHAR(MAX), -- Ex: '10,25,30'
+@data_inicio DATE,
+@data_fim DATE,
+@inicio_promo DATE,
+@fim_promo DATE,
+@porcentagem_desc DECIMAL(5, 2)
+AS
+BEGIN
+-- Insere todos os itens da lista de uma vez, calculando o preço linha a linha
+INSERT INTO locacao_itens (
+id_locacao,
+id_equipamento,
+data_solicitacao,
+data_inicio,
+data_fim,
+valor_final
+)
+SELECT
+@id_locacao,
+e.id_equipamento,
+GETDATE(),
+@data_inicio,
+@data_fim,
+-- Lógica do Desconto (CASE WHEN) aplicada diretamente no SELECT
+CASE
+WHEN @data_inicio >= @inicio_promo AND @data_inicio <= @fim_promo
+THEN e.preco - (e.preco * (@porcentagem_desc / 100))
+ELSE e.preco
+END
+FROM equipamento e
+INNER JOIN STRING_SPLIT(@lista_equipamentos, ',') AS lista
+ON e.id_equipamento = lista.value;
+
+END
+GO
+-- fim proc
+
+-- init exec
+EXEC sp_AdicionarLoteEquipamentos
+@id_locacao = 200,
+@lista_equipamentos = '1,2,5',
+@data_inicio = '2025-12-10',
+@data_fim = '2025-12-15',
+@inicio_promo = '2025-12-01',
+@fim_promo = '2025-12-31',
+@porcentagem_desc = 10.00;
+
+-- fim exec
 
 -- PERGUNTA 6 - Cliente que mais alugou equipamentos? **Subconsultas**
 
@@ -106,4 +157,5 @@ WHERE (
     FROM locacao l
     WHERE l.id_cliente = c.id_cliente
 ) > 0
+
 ORDER BY total_locacoes DESC, total_itens_alugados DESC;
