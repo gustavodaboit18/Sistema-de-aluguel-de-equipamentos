@@ -1,4 +1,4 @@
---pergunta 1: 1-Em qual cliente está cada equipamento? JOIN
+--PERGUNTA 1 - Em qual cliente está cada equipamento? JOIN
 
 SELECT e.nome,e.marca,e.id_equipamento ,c.nome
 FROM equipamento e 
@@ -6,7 +6,7 @@ inner join locacao_itens li on li.id_equipamento=e.id_equipamento
 inner join locacao l on l.id_locacao=li.id_locacao
 inner join cliente c on c.id_cliente=l.id_cliente
 
--- pergunta 2-Qual os 5 equipamentos que teve mais aluguéis? CTE
+-- PERGUNTA 2 - Qual os 5 equipamentos que teve mais aluguéis? CTE
 
 with cte as(
 select e.nome,e.marca,li.id_equipamento,count(li.id_locacao) as qtde_locacoes
@@ -21,7 +21,7 @@ select * from ranking
 where rank<=5
 order by qtde_locacoes desc
 
--- pergunta 3- Quais os 5 equipamentos com mais tempo ocioso? WINDOW FINCTION(rank)
+-- PERGUNTA 3 - Quais os 5 equipamentos com mais tempo ocioso? WINDOW FINCTION(rank)
 
 WITH ultima_locacao AS (
 SELECT 
@@ -58,7 +58,7 @@ SELECT TOP 5
 FROM ranking
 ORDER BY posicao;
     
--- pergunta 4- Quais os três equipamentos que geraram mais receita para a empresa em um determinado ano? FUNCTION
+-- PERGUNTA 4 - Quais os três equipamentos que geraram mais receita para a empresa em um determinado ano? FUNCTION
 
 DROP FUNCTION IF EXISTS dbo.fn_EquipamentosReceita;
 GO
@@ -81,8 +81,30 @@ GO
 
 select * from dbo.fn_EquipamentosReceita(2023);
 
+-- PERGUNTA 5 - 
 
+-- PERGUNTA 6 - Cliente que mais alugou equipamentos? **Subconsultas**
 
-
-
-
+SELECT
+c.nome,
+(
+-- Subconsulta para contar o total de locações
+SELECT COUNT()
+FROM locacao l
+WHERE l.id_cliente = c.id_cliente
+) AS total_locacoes,
+(
+-- Subconsulta para contar o total de itens alugados
+SELECT COUNT()
+FROM locacao_itens li
+JOIN locacao l ON l.id_locacao = li.id_locacao
+WHERE l.id_cliente = c.id_cliente
+) AS total_itens_alugados
+FROM cliente c
+WHERE (
+-- Condição original: cliente tem pelo menos 1 locação
+SELECT COUNT(*)
+FROM locacao l
+WHERE l.id_cliente = c.id_cliente
+) > 0
+ORDER BY total_locacoes DESC, total_itens_alugados DESC;
