@@ -8,6 +8,26 @@ Desenvolvedores:
 - Igor Porto de Matos
 - Luiz Eduardo Madeira Pires
 
+Utilizamos a ferramenta de modelagem de dados [drawSQL](https://drawsql.app) para criação do modelo físico do banco de dados, para posterior exportação dos scripts DDL das tabelas e relacionamentos.<br>
+Arquivo fonte: [Modelo Fisico](https://drawsql.app/teams/bruno-time/diagrams/aluguel-de-equipamentos).<br>
+
+![image](https://github.com/gustavodaboit18/Sistema-de-aluguel-de-equipamentos/blob/main/modelo_fisico/Modelo_ER.png?raw=true)
+
+### Dicionário de Dados
+As informações sobre as tabelas e índices foram documentados na planilha [AluguelEquipamento-Dicionario.xlsx](dicionario_dados/AluguelEquipamento-Dicionario.xlsx).
+
+### Referências Bibliográticas
+Colocar aqui as referencias de artigos, sites, outros repositórios e livros que usou para o projeto.
+
+Abaixo, segue os scripts SQL separados por tipo:
++ [Tabelas](scripts/ddl/tabelas)
++ [Índices](scripts/ddl/indices)
++ [Gatilhos](scripts/ddl/gatilhos)
++ [Procedimentos armazenados](scripts/ddl/procedimentos-armazenados)
++ [Funções](scripts/ddl/funcoes)
++ [DML](scripts/dml)
+
+
 # Ambiente SQL Server em Docker
 
 Este projeto utiliza um container Docker do SQL Server já configurado para:
