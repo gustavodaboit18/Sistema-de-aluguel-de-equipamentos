@@ -124,7 +124,7 @@ GO
 
 -- init exec
 EXEC sp_AdicionarLoteEquipamentos
-@id_locacao = 200,
+@id_locacao = 1,
 @lista_equipamentos = '1,2,5',
 @data_inicio = '2025-12-10',
 @data_fim = '2025-12-15',
@@ -133,6 +133,15 @@ EXEC sp_AdicionarLoteEquipamentos
 @porcentagem_desc = 10.00;
 
 -- fim exec
+
+ALTER TABLE locacao_itens
+ADD valor_final DECIMAL(10,2);
+
+-- verificacao se funcionou a proc para o id locacao desejado
+SELECT * FROM locacao_itens
+WHERE id_locacao = 1;
+
+EXEC sp_helpindex 'locacao_itens';
 
 -- PERGUNTA 6 - Cliente que mais alugou equipamentos? **Subconsultas**
 
